@@ -28,7 +28,7 @@ async def main():
             print("🌟 Video generated")
             launch_video()
     except Exception as e:
-        print("❌ ❌ ❌ : "+e.message)
+        print("❌ ❌ ❌ : "+str(e))
         try:
             launch_video()
         except Exception as e:
