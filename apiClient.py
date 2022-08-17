@@ -54,6 +54,4 @@ def get_data():
 def download_content(slide_data, order):
     print(slide_data["link"])
     wget.download(slide_data["link"], out=OUTPUT_FOLDER)
-    print("TODO")
-    #TODO
     

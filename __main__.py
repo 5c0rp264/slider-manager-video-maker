@@ -28,8 +28,11 @@ async def main():
             print("🌟 Video generated")
             launch_video()
     except Exception as e:
-        #just play old video
-        raise e
+        print("❌ ❌ ❌ : "+e.message)
+        try:
+            launch_video()
+        except Exception as e:
+            raise e
 
 
 
@@ -37,5 +40,5 @@ async def main():
 
 
 if __name__ == '__main__':
-    [os.mkdir(dir) for dir in ['output','render','backgrounds'] if not os.path.exists(dir)]
+    [os.mkdir(dir) for dir in ['output','render'] if not os.path.exists(dir)]
     asyncio.run(main())
