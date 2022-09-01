@@ -1,23 +1,55 @@
-import vlc
+# import vlc
 # import cv2
 # import numpy as np
+import tkinter as tk
+from tkvideo import tkvideo
 from utils import RENDERED_VIDEO
 
+
+
+def load_video(file_path):
+    """ loads the video """
+
+    if file_path:
+        vid_player.load(file_path)
+
+
+def video_ended(event):
+    """ handle video ended """
+    vid_player.seek(0)
+    if vid_player.is_paused():
+        vid_player.play()
+
 def launch_video():
-    media_player = vlc.MediaPlayer()
+    root = tk.Tk()
+    root.title("Tkinter media")
+
+    load_video(RENDERED_VIDEO)
+
+    vid_player = TkinterVideo(scaled=True, master=root)
+    vid_player.pack(expand=True, fill="both")
+
+    vid_player.bind("<<Ended>>", video_ended )
+    if vid_player.is_paused():
+        vid_player.play()
+
+    root.mainloop()
+
+# def launch_video():
+#     media_player = vlc.MediaPlayer()
  
-    # toggling full screen
-    media_player.toggle_fullscreen()
+#     # toggling full screen
+#     media_player.toggle_fullscreen()
     
     
-    # media object
-    media = vlc.Media(RENDERED_VIDEO)
+#     # media object
+#     media = vlc.Media(RENDERED_VIDEO)
     
-    # setting media to the media player
-    media_player.set_media(media)
+#     # setting media to the media player
+#     media_player.set_media(media)
     
-    # start playing video
-    media_player.play()
+#     # start playing video
+#     media_player.play()
 
 
 

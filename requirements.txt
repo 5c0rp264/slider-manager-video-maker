@@ -1,7 +1,7 @@
-undetected-chromedriver
-selenium
-edge-tts
+asyncio
 moviepy
 requests
+wget
 pyyaml
-deepl
+tkinter
+

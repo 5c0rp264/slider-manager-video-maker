@@ -28,6 +28,7 @@ def render(data):
     print(image_clips)
     # Combine all the clips into one
     image_clips = concatenate_videoclips(image_clips, method="compose").set_position(("center","center"))
+    image_clips.close()
     print(image_clips)
 
 

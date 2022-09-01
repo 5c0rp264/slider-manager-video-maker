@@ -51,7 +51,23 @@ def get_data():
     else:
         return response.json()
 
+def add_filename_to_data(slide_data):
+    for slide in slide_data :
+        slide["filename"] = slide["link"].rsplit('/', 1)[-1]
+
 def download_content(slide_data, order):
     print(slide_data["link"])
     wget.download(slide_data["link"], out=OUTPUT_FOLDER)
+
+
+
+
+
+def is_internet():
+    try:
+        requests.get("http://www.google.com", timeout=2)
+        return True
+    except:
+        print(Error)
+        return False
     

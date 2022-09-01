@@ -1,38 +1,58 @@
 import asyncio,os,video
-from apiClient import get_data, download_content
-from videoReader import launch_video
+from apiClient import *
+from slideshow import *
+from device_setup_screen import *
+from wifi_setup_screen import *
 
 
  
 async def main():
     try:
 
-        # Clean 'temporary' files from last video
-        for file in os.listdir('output'):
-            os.remove(f'output/{file}')
 
-        # Getting all datas from the api
-        print("\n⚙️ Getting data")
-        slide_data = get_data()
-        #print(slide_data)
+        if is_internet():
+            # Clean 'temporary' files from last video
+            for file in os.listdir('output'):
+                os.remove(os.path.join('output/', file))
+
+            # Getting all datas from the api
+            print("\n⚙️ Getting data")
+            slide_data = get_data()
+            if slide_data:
+                print("\n⚙️ Parsing data")
+                add_filename_to_data(slide_data)
+                print(slide_data)
 
 
-        print("\n📩 Downloading slide contents")
-        for index, slide in enumerate(slide_data):
-            download_content(slide, index)
+                print("\n📩 Downloading slide contents")
+                for index, slide in enumerate(slide_data):
+                    download_content(slide, index)
 
-        # Render & Upload
-        print("\n🎥 Rendering video...")
-        if video.render(slide_data):
-            # Upload video if rendered
-            print("🌟 Video generated")
-            launch_video()
+                # print("\n🎥 Rendering video...")
+                # if video.render(slide_data):
+                #     print("🌟 Video generated")
+
+                slideshow = Slideshow(slide_data)
+                slideshow.show_slides()
+                slideshow.mainloop()
+            else :
+                uid = get_uid()
+                if uid :
+                    screen = Device_setup_screen(uid=uid)
+                else :
+                    screen = Device_setup_screen(message="Une errreur est survenue \nMerci de nous contacter")
+                screen.mainloop()
+        else :
+            screen = Wifi_setup_screen()
+            screen.mainloop()
+
+        
     except Exception as e:
-        print("❌ ❌ ❌ : "+str(e))
-        try:
-            launch_video()
-        except Exception as e:
-            raise e
+        print("\n❌ ❌ ❌ : "+str(e))
+        # try:
+        #     launch_slideshow(slide_data)
+        # except Exception as e:
+        #     raise e
 
 
 
@@ -41,4 +61,8 @@ async def main():
 
 if __name__ == '__main__':
     [os.mkdir(dir) for dir in ['output','render'] if not os.path.exists(dir)]
-    asyncio.run(main())
+    os.system('export DISPLAY=:0')
+    futures = [main()]
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(asyncio.wait(futures))
+    # asyncio.run(main())
