@@ -1,4 +1,6 @@
+import time
 from tkinter import *
+from apiClient import get_version, update_version
 from videoReader import launch_video
 from PIL import ImageTk, Image
 from time import sleep
@@ -18,9 +20,20 @@ class Slideshow(Tk):
         self.track_media_index = 0
         self.media_canvas = Canvas(self, width = self.w, height = self.h, bg='black', highlightthickness=0)
         self.media_canvas.pack()
+        self.new_data_timer = time.time()
+        self.version = get_version()
 
 
     def show_slides(self):
+        if time.time() > self.new_data_timer + 60*10 :
+            version = update_version()
+            self.new_data_timer = time.time()
+            if version > self.version :
+                self.destroy()
+
+
+
+
         if self.track_media_index < len(self.medias):     
             # TODO :  test if media is image or video and launch adaptatively 
             current_slide = self.medias[self.track_media_index]

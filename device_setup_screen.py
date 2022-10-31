@@ -1,4 +1,5 @@
 from tkinter import *
+from apiClient import get_data
 from videoReader import launch_video
 from PIL import ImageTk, Image
 from time import sleep
@@ -30,14 +31,23 @@ class Device_setup_screen(Tk):
         # Add up text to explain the process to the client
         
         if uid is not None:
-            self.canvas.create_text(int(self.w*0.05), int(self.h*0.35), text="Votre code :", fill="white", font=('Helvetica 45 bold'), anchor='w')
-            self.canvas.create_text(int(self.w*0.05), int(self.h*0.42), text=uid, fill="white", font=('Helvetica 45'), anchor='w')
+            self.canvas.create_text(int(self.w*0.025), int(self.h*0.25), text="Votre code :", fill="white", font=('Helvetica 45 bold'), anchor='w')
+            self.canvas.create_text(int(self.w*0.025), int(self.h*0.42), text=uid, fill="white", font=('Helvetica 40'), anchor='w')
             
-            self.canvas.create_text(int(self.w*0.05), int(self.h*0.6), text="Merci de nous contacter avec le code ci-dessus afin\nde finir le paramétrage de votre appareil à distance", fill="white", font=('Helvetica 25'), anchor='w')
+            self.canvas.create_text(int(self.w*0.05), int(self.h*0.7), text="Merci de nous contacter avec le code\nci-dessus afin de finir\nle paramétrage de votre appareil\nà distance", fill="white", font=('Helvetica 25'), anchor='w', justify="center")
         elif message is not None:
             self.canvas.create_text(int(self.w*0.1), int(self.h*0.45), text=message, fill="white", font=('Helvetica 20 bold'), anchor='w')
         points = [int(self.w*0.5), int(self.h*1), int(self.w*1), int(self.h*0.5), int(self.w*1), int(self.h*1)]
         self.canvas.create_polygon(points, fill='#002366')
-        self.canvas.create_text(int(self.w*0.95), int(self.h*0.9), text="Contactez nous !", fill="white", font=('Helvetica 45 bold'), anchor='e')
+        self.canvas.create_text(int(self.w*0.95), int(self.h*0.8), text="Contactez nous !", fill="white", font=('Helvetica 20 bold'), anchor='e')
+        self.canvas.create_text(int(self.w*0.95), int(self.h*0.9), text="Etape 2/2", fill="white", font=('Helvetica 45 bold'), anchor='e')
 
         self.canvas.pack()
+
+
+    def checkloop(self):
+        slide_data = get_data()
+        if slide_data:
+            self.destroy()
+        else :
+            self.after(20000, self.checkloop)
